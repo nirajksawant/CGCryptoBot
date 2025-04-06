@@ -1,0 +1,40 @@
+# File: tests/test_single_token_profile.py
+
+import asyncio
+import aiohttp
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+
+# You can plug in any real token for which the profile is available on Dexscreener
+TEST_CHAIN_ID = "bsc"
+TEST_TOKEN_ADDRESS = "0xe9e7cea3dedca5984780bafc599bd69add087d56"  # BUSD
+SINGLE_PROFILE_URL = f"https://api.dexscreener.com/token-profiles/latest/v1/{TEST_CHAIN_ID}/{TEST_TOKEN_ADDRESS}"
+
+async def test_fetch_single_token_profile():
+    logging.info(f"Testing Dexscreener token profile from {SINGLE_PROFILE_URL}")
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.get(SINGLE_PROFILE_URL) as resp:
+                if resp.status != 200:
+                    logging.error(f"❌ Unexpected status code: {resp.status}")
+                    return
+                token_data = await resp.json()
+                logging.info("✅ Token profile fetched successfully.")
+
+                # Debug output of main token fields
+                for field in ["symbol", "name", "token_address", "chain_id", "icon", "description"]:
+                    logging.debug(f"{field}: {token_data.get(field)}")
+
+                # Validate "links" field
+                links = token_data.get("links")
+                if links and isinstance(links, dict):
+                    logging.info(f"✅ Links found: {json.dumps(links, indent=2)}")
+                else:
+                    logging.warning("⚠️ No 'links' field found or it’s not a dict.")
+
+    except Exception as e:
+        logging.error(f"❌ Error testing single token profile: {e}")
+
+if __name__ == "__main__":
+    asyncio.run(test_fetch_single_token_profile())

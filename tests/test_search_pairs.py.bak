@@ -1,0 +1,47 @@
+# File: test_search_pairs.py
+# Purpose: Test the /latest/dex/search endpoint on Dexscreener to find coins paired with USDT
+
+import aiohttp
+import asyncio
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+DEX_SEARCH_URL = "https://api.dexscreener.com/latest/dex/search/"
+
+async def fetch_search_results(query: str):
+    """
+    Calls Dexscreener /search endpoint for given query (e.g. 'USDT').
+    Returns matching trading pairs (max 100 results).
+    """
+    url = f"{DEX_SEARCH_URL}?q={query}"
+    logger.info(f"🔍 Testing Dexscreener search API with URL: {url}")
+
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as response:
+                if response.status != 200:
+                    logger.error(f"❌ Unexpected status code: {response.status}")
+                    return None
+
+                result = await response.json()
+                logger.info(f"✅ Received {len(result.get('pairs', []))} pairs from Dexscreener search.")
+                return result
+
+    except Exception as e:
+        logger.error(f"🔥 Exception during Dexscreener search call: {e}")
+        return None
+
+async def main():
+    query = "USDT"
+    result = await fetch_search_results(query)
+
+    if result:
+        for pair in result.get("pairs", [])[:5]:  # Show top 5
+            logger.info(f"🪙 {pair.get('pairSymbol')} | {pair.get('chainId')} | {pair.get('pairAddress')}")
+    else:
+        logger.warning("⚠️ No result returned from Dexscreener search.")
+
+if __name__ == "__main__":
+    asyncio.run(main())

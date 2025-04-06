@@ -1,0 +1,23 @@
+{
+    "database": {
+        "dbname": "crypto_bot",
+        "user": "admin",
+        "password": "Chindhi99!",
+        "host": "localhost",
+        "port": 5432
+    },
+    "api": {
+        "binance": {
+            "websocket_url": "wss://stream.binance.com:9443/ws/!ticker@arr"
+        },
+        "dexscreener_url": "https://api.dexscreener.com/latest/dex/pairs"
+    },
+    "logging": {
+        "log_file": "CGcryptobot.log",
+        "log_level": "DEBUG"
+    },
+    "flask": {
+        "host": "0.0.0.0",
+        "port": 5000
+    }
+}

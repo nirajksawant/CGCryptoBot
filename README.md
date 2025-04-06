@@ -1,0 +1,2 @@
+# CGCryptoBot
+Cryptobot with Chatgpt

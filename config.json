@@ -1,23 +1,22 @@
 {
-    "database": {
-        "dbname": "crypto_bot",
-        "user": "admin",
-        "password": "Chindhi99!",
-        "host": "localhost",
-        "port": 5432
-    },
-    "api": {
-        "binance": {
-            "websocket_url": "wss://stream.binance.com:9443/ws/!ticker@arr"
-        },
-        "dexscreener_url": "https://api.dexscreener.com/latest/dex/pairs"
-    },
-    "logging": {
-        "log_file": "CGcryptobot.log",
-        "log_level": "DEBUG"
-    },
-    "flask": {
-        "host": "0.0.0.0",
-        "port": 5000
-    }
+  "binance": {
+    "api_base": "https://api.binance.com/api/v3/exchangeInfo"
+  },
+  "dexscreener": {
+    "token_profiles_url": "https://api.dexscreener.com/token-profiles/latest/v1",
+    "search_pairs_url": "https://api.dexscreener.com/latest/dex/search?q=",
+    "rss_feed_url": "https://www.binance.com/en/support/announcement/rss",
+    "announcements_url": "https://www.binance.com/en/support/announcement/c-48",
+    "scrape_announcement_detail": true
+  },
+  "database": {
+    "host": "localhost",
+    "port": 5432,
+    "user": "your_db_user",
+    "password": "your_db_password",
+    "dbname": "crypto_monitor"
+  },
+  "dashboard": {
+    "port": 5050
+  }
 }

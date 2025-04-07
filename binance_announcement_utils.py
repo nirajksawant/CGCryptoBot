@@ -5,9 +5,9 @@ import re
 import aiohttp
 import feedparser
 from bs4 import BeautifulSoup
-from collectors.dexscreener_collector import fetch_token_profiles
 
 BINANCE_ANNOUNCEMENT_RSS = "https://www.binance.com/en/support/announcement/rss"
+DEXSCREENER_SEARCH_URL = "https://api.dexscreener.com/latest/dex/search"
 
 async def fetch_latest_announcement_links():
     """
@@ -65,6 +65,7 @@ async def parse_announcement_details(url):
     except Exception as e:
         logging.error(f"❌ Error parsing announcement URL {url}: {e}")
         return {}
+
 
 
 async def enrich_token_details(symbol):

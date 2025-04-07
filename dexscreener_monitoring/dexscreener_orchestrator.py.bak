@@ -1,0 +1,45 @@
+# dexscreener_monitor/dexscreener_orchestrator.py
+
+import asyncio
+import logging
+from dexscreener_utils import fetch_token_profiles
+from binance_announcement_utils import filter_legit_tokens
+from notification_framework import process_and_dispatch_alerts
+
+logging.basicConfig(level=logging.INFO)
+
+# Sample placeholder: replace with actual token list or logic
+TOKEN_SYMBOLS = ["SOL", "NEAR", "BONK"]
+
+async def orchestrate_dexscreener_workflow():
+    try:
+        logging.info("🚀 Starting Dexscreener token monitor workflow...")
+        all_profiles = []
+
+        for symbol in TOKEN_SYMBOLS:
+            logging.info(f"🔄 Fetching token data for: {symbol}")
+            profiles = await fetch_token_profiles(symbol)
+
+            for profile in profiles:
+                profile["source"] = "dexscreener_manual_watchlist"
+                all_profiles.append(profile)
+
+        logging.info(f"🔍 Total profiles collected: {len(all_profiles)}")
+
+        # Filter legit tokens
+        filtered = filter_legit_tokens(all_profiles)
+        logging.info(f"✅ {len(filtered)} tokens passed filtering")
+
+        # Dispatch alerts
+        if filtered:
+            logging.info("📢 Dispatching alerts for filtered tokens")
+            process_and_dispatch_alerts(filtered)
+        else:
+            logging.info("ℹ️ No tokens passed filters to alert")
+
+    except Exception as e:
+        logging.error(f"❌ Error in Dexscreener orchestrator: {e}")
+
+
+if __name__ == "__main__":
+    asyncio.run(orchestrate_dexscreener_workflow())
